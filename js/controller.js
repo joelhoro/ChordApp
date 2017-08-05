@@ -10,6 +10,7 @@ angular.module('chordApp')
 
     // just for testing
     var out = [];
+    out.push([]);
     for(var i = 0; i < 10; i++) {
       out.push(chord.slice(0));
       chord = util.Invert(chord,"down");
@@ -53,5 +54,7 @@ angular.module('chordApp')
   else {
     $scope.chords = chordInversions();
   }
-  
+
+  $scope.griffs = _.keys(util.Griffs);
+  $scope.griff = $scope.griffs[0];
 });

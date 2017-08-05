@@ -18,7 +18,8 @@
     <button ng-click='load()'>load</button>
     <select ng-model="selectedSet" ng-options="x for x in chordSets"></select> 
     <input type=text ng-model='selectedSet' />
-    
+    <!-- Griff: <select ng-model="griff" ng-options="x for x in griffs"></select>  -->
+    <br><br>
     <div ng-repeat='chord in chords' ng>
       <button ng-click='delete($index)'>x</button>
       <button ng-click='insert($index)'>add</button>
@@ -28,7 +29,7 @@
       <button ng-click='transpose($index,"up")' >+</button>
       <button ng-click='invert($index,"up")' >I+</button>
 
-      <br><accordion-keyboard size=20 notes='{{chord}}'></accordion-keyboard>
+      <br><accordion-keyboard size=20 notes='{{chord}}' griff='{{griff}}'></accordion-keyboard>
 
 
     </div>

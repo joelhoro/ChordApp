@@ -49,4 +49,11 @@ angular.module('chordApp')
     return chords.map(c => this.IntToChord(this.ChordToInt(c) + shift));
     
   }
+
+  this.Griffs = {
+          'c-system' : (i,j) => 3*i+j*2+2,
+          'b-system' : (i,j) => 3*i+j+2,
+        }
+
+
 })

@@ -20,10 +20,10 @@ angular.module('chordApp')
       scope: {
         notes: '@',
         size: '@',
+        griff: '@'
       },
       controller: function($scope) {
-        //debugger;
-        $scope.range = [0, 1, 2, 3, 4, 5,6,7,8,9, 10, 11, 12, 13];
+        $scope.range = _.range(0,17);
         var sizeString = $scope.size || "100";
         $scope.scale = parseFloat(sizeString);
         $scope.textClass = textClass($scope.scale);
@@ -44,14 +44,15 @@ angular.module('chordApp')
           $scope.noteNames[i] = notes[note];
           $scope.black[i] = notes[note].length > 1;
         }
+
+        $scope.noteFn = util.Griffs[$scope.griff];
       },
       //replace: true,
       template: `
        <svg type='accordionkeyboard' width={{25*size}} height={{6*size}}>
         <g name='accordionrow-{{i}}' ng-repeat='i in range' >
           <g note='{{noteNames[position]}}' class='key' ng-class='{ highlighted: noteHighlighted[position], black: black[position] }' ng-repeat='j in [0,1,2,3,4]' 
-            ng-init='x=5*scale-w*i-j*w/2+200; y=scale*5-j*w; position=3*i+j+1' 
-           >
+            ng-init='x=-9.5*scale+w*i+j*w/2+200; y=scale*1+j*w; position=noteFn(i,j)' >
           <circle cx='{{x}}' cy='{{y}}' r={{r}} stroke=black />
           <text class='{{textClass}}' x={{x-0.15*scale}} y={{y+0.10*scale}}>{{noteNames[position]}}</text>
           </g>
