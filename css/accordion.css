@@ -1,0 +1,46 @@
+circle {
+  fill: white;
+}
+
+.black circle {
+  fill: #DDDDDD;
+}
+
+
+.black text {
+  fill: black;
+}
+
+.highlighted circle {
+  fill: orange;
+}
+
+text {
+  font-weight: bold;
+  font-family: 'Indie Flower', cursive;
+}
+
+.accordion-key {
+  font-size: 15pt;  
+}
+
+.accordion-key-xl {
+  font-size: 25pt;  
+}
+
+.accordion-key-lg {
+  font-size: 25pt;  
+}
+
+.accordion-key-sm {
+  font-size: 8pt;  
+}
+
+.accordion-key-xs {
+  font-size: 6pt;  
+}
+
+
+.key:hover circle {
+  fill: orange;
+}

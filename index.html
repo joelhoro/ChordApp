@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Chord creator</title>
+  
+<link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>  
+<link href='css/accordion.css' rel='stylesheet' type='text/css'>  
+  
+  
+  
+</head>
+
+<body>
+  <div ng-app='chordApp'>
+  <div ng-controller='chordAppCtrl'>
+    <button ng-click='save()'>save</button>
+    <button ng-click='load()'>load</button>
+    <select ng-model="selectedSet" ng-options="x for x in chordSets"></select> 
+    <input type=text ng-model='selectedSet' />
+    
+    <div ng-repeat='chord in chords' ng>
+      <button ng-click='delete($index)'>x</button>
+      <button ng-click='insert($index)'>add</button>
+      <button ng-click='invert($index,"down")' >I-</button>
+      <button ng-click='transpose($index,"down")' >-</button>
+      <input type=text ng-model="chord" ></input>
+      <button ng-click='transpose($index,"up")' >+</button>
+      <button ng-click='invert($index,"up")' >I+</button>
+
+      <br><accordion-keyboard size=20 notes='{{chord}}'></accordion-keyboard>
+
+
+    </div>
+  
+  
+  </div>
+</div>
+
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.2/angular.min.js'></script>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
+
+  <script src='js\app.js'></script>
+  <script src='js\util.js'></script>
+  <script src='js\storage.js'></script>
+  <script src='js\controller.js'></script>
+  <script src='js\accordionWidget.js'></script>
+
+</body>
+</html>
