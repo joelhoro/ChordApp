@@ -23,7 +23,10 @@ angular.module('chordApp')
         griff: '@'
       },
       controller: function($scope) {
-        $scope.range = _.range(0,17);
+
+        var numberOfCols = 17;
+
+        $scope.range = _.range(0,numberOfCols);
         var sizeString = $scope.size || "100";
         $scope.scale = parseFloat(sizeString);
         $scope.textClass = textClass($scope.scale);
@@ -34,25 +37,26 @@ angular.module('chordApp')
         $scope.noteHighlighted = [];
 
         var selected = JSON.parse($scope.notes)
-          .map(n => util.ChordToInt(n) % 12);
+          .map(n => util.ChordToInt(n));
         $scope.noteNames = []; 
         $scope.positions = [];
         $scope.black = [];
         for (var i = 0; i < 90; i++) {
           note = (i+2)%12;
-          $scope.noteHighlighted[i] = selected.indexOf(note) >= 0;
+          $scope.noteHighlighted[i] = selected.indexOf(i+2) >= 0;
           $scope.noteNames[i] = notes[note];
           $scope.black[i] = notes[note].length > 1;
         }
 
         $scope.noteFn = util.Griffs[$scope.griff];
+        $scope.test = util.test;
       },
       //replace: true,
       template: `
        <svg type='accordionkeyboard' width={{25*size}} height={{6*size}}>
-        <g name='accordionrow-{{i}}' ng-repeat='i in range' >
+        <g name='accordionrow-{{i}}' ng-repeat='i in range'  >
           <g note='{{noteNames[position]}}' class='key' ng-class='{ highlighted: noteHighlighted[position], black: black[position] }' ng-repeat='j in [0,1,2,3,4]' 
-            ng-init='x=-9.5*scale+w*i+j*w/2+200; y=scale*1+j*w; position=noteFn(i,j)' >
+            ng-init='x=-9.5*scale+w*i+j*w/2+200; y=scale*1+j*w; position=noteFn(i,j)' ng-click='test(notes,position)'>
           <circle cx='{{x}}' cy='{{y}}' r={{r}} stroke=black />
           <text class='{{textClass}}' x={{x-0.15*scale}} y={{y+0.10*scale}}>{{noteNames[position]}}</text>
           </g>
