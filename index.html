@@ -2,7 +2,7 @@
 <html >
 <head>
   <meta charset="UTF-8">
-  <title>Chord creator</title>
+  <title>Chord Creator</title>
   
 <link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>  
 <link href='css/accordion.css' rel='stylesheet' type='text/css'>  
@@ -14,6 +14,7 @@
 <body>
   <div ng-app='chordApp'>
   <div ng-controller='chordAppCtrl'>
+    <button ng-click='playAll()'>play all</button>
     <button ng-click='save()'>save</button>
     <button ng-click='load()'>load</button>
     <select ng-model="selectedSet" ng-options="x for x in chordSets"></select> 
@@ -28,6 +29,8 @@
       <input type=text ng-model="chord" ></input>
       <button ng-click='transpose($index,"up")' >+</button>
       <button ng-click='invert($index,"up")' >I+</button>
+      <button ng-click='play(chord,"chords")'>play</button>
+      <button ng-click='play(chord,"arpeggio")'>arpeggio</button>
 
       <br><accordion-keyboard size=20 notes='{{chord}}' griff='{{griff}}'></accordion-keyboard>
 
@@ -47,6 +50,16 @@
   <script src='js\storage.js'></script>
   <script src='js\controller.js'></script>
   <script src='js\accordionWidget.js'></script>
+
+  <script src="lib\audiosynth.js"></script>
+
+  <script>
+
+    // play here if needed  
+  
+  </script>
+
+
 
 </body>
 </html>
