@@ -2,18 +2,26 @@ angular.module('chordApp')
 .service('util',function(){
   
   var notes = ["C","D","E","F","G","A","B"];
-  var allNotes = ["C","C#","D","Eb","E","F","F#","G","Ab","A",
-                 "Bb","B"];
+  var allNotes = ["C","C#","D","D#","E","F","F#","G","G#","A",
+                 "A#","B"];
   
   this.IntToChord = function(k) {
     var note = k%12;
     var octave = ( k - note) / 12;
     return allNotes[note] + octave.toString();
   }
-  
-  this.ChordToInt = function(chord) {
+
+  function matchChord(chord) {
     var chordPatt = /([ABCDEFG])([#b]?)([0-9])/
-    match = chord.match(chordPatt)
+    return chord.match(chordPatt)
+  }
+  
+  this.Normalize = function(chord) {
+    return this.IntToChord(this.ChordToInt(chord));
+  }
+
+  this.ChordToInt = function(chord) {
+    match = matchChord(chord);
     if(match == null)
       return -1;
     [full,note,alteration,octave] = match
@@ -25,6 +33,15 @@ angular.module('chordApp')
     return value;
   }
   
+  this.ChordSplit = function(chord) {
+    chord = this.Normalize(chord);
+    match = matchChord(chord);
+    if(match == null)
+      return -1;
+    [full,note,alteration,octave] = match
+    return [note+alteration,octave];
+  }
+
   this.Invert = function(chords,direction) {
     var chords = chords.slice();
     var sign = 1;
@@ -54,6 +71,20 @@ angular.module('chordApp')
           'c-system' : (i,j) => 3*i+j*2+2,
           'b-system' : (i,j) => 3*i+j+2,
         }
+
+  this.test = function(x) {
+    debugger;
+  }
+
+  var piano = Synth.createInstrument('piano');
+
+  this.PlayNotes = function(notes,interval) {
+    var i = 0;
+    notes.map(note => {
+      console.log("Preparing", note);
+      setTimeout(() => piano.play(note[0],note[1],note[2]),(i++ + 0.1)*interval);
+    });
+  }
 
 
 })
