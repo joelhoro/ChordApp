@@ -76,13 +76,15 @@ angular.module('chordApp')
     debugger;
   }
 
-  var piano = Synth.createInstrument('piano');
+  var instrumentName = 'acoustic';
+  var instrumentName = 'piano';
+  var instrument = Synth.createInstrument(instrumentName);
 
   this.PlayNotes = function(notes,interval) {
     var i = 0;
     notes.map(note => {
-      console.log("Preparing", note);
-      setTimeout(() => piano.play(note[0],note[1],note[2]),(i++ + 0.1)*interval);
+      //console.log("Preparing", note);
+      setTimeout(() => instrument.play(note[0],note[1],note[2]),(i++ + 0.1)*interval);
     });
   }
 
