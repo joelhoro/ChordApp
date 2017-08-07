@@ -24,7 +24,7 @@ angular.module('chordApp')
       },
       controller: function($scope) {
 
-        var numberOfCols = 17;
+        var numberOfCols = 21;
 
         $scope.range = _.range(0,numberOfCols);
         var sizeString = $scope.size || "100";

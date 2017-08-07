@@ -31,6 +31,13 @@ angular.module('chordApp')
     console.log("Transposing", before, direction, "=>", after);
     $scope.chords[index] = after;
   }
+
+  $scope.sort = function(index) {
+    var before = $scope.chords[index].slice(0);
+    var after = util.Sort(before);
+    console.log("Sort", before, "=>", after);
+    $scope.chords[index] = after;
+  }
   
   $scope.insert = function(index) {
     var copy = $scope.chords[index].slice(0);
@@ -64,6 +71,8 @@ angular.module('chordApp')
     })
   }
 
+
+
   $scope.chordSets = storage.findChordSets();
   var loadFirstChordSet = false;
   if(loadFirstChordSet && $scope.chordSets.length>0) {
@@ -72,8 +81,13 @@ angular.module('chordApp')
     storage.load($scope); 
   }
   else {
-    $scope.chords = chordInversions();
+    //$scope.chords = chordInversions();
+    var sequence = ["Cm9", "F7b9#11", "Bb7M9", "Eb7M" , "Am5b7", "D9b", "Gm11", "Gsus"];
+    var chords = sequence.map(c => util.SymbolToChord(c));
+    console.log("Chords:",chords);
+    $scope.chords = chords;
   }
+
 
   $scope.griffs = _.keys(util.Griffs);
   $scope.griff = $scope.griffs[0];

@@ -60,6 +60,10 @@ angular.module('chordApp')
     
     return chords;
   }
+
+  this.Sort = function(chords) {
+    return _.sortBy(chords,c => this.ChordToInt(c));
+  }
   
   this.Transpose = function(chords,direction) {
     var shift = {"up" : 1, "down" : -1}[direction];
@@ -88,5 +92,30 @@ angular.module('chordApp')
     });
   }
 
+
+  var chordTypes = {
+
+    ''  : [4,7],
+    'm' : [3,7],
+    'm7' : [3,7,10],
+    'm5b7' : [3,6,10,12],
+    'm9' : [3,7,10,15],
+    '7' : [4,7,10],
+    '7b9#11' : [4,7,10,13,18],
+    '7M' : [4,7,11],
+    '7M9' : [4,7,11,14],
+    '9b' : [4,7,10,14],
+    'm11' : [3,7,10,15,19],
+    'sus' : [4,8,10,13]
+  }
+
+  this.SymbolToChord = function(symbol) {
+    var re = /([ABCDEFG])([#b]?)(.*)/
+    var match = symbol.match(re)  
+    var baseRank = this.ChordToInt(match[1]+match[2]+"3");
+    var chordIntervals = chordTypes[match[3]]
+    chordIntervals.splice(0,0,-24);
+    return chordIntervals.map(c => this.IntToChord(baseRank + c));
+  }
 
 })
