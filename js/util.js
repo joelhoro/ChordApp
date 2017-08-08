@@ -58,7 +58,7 @@ angular.module('chordApp')
       chords.reverse();
     }
     
-    return chords;
+    return this.Sort(chords);
   }
 
   this.Sort = function(chords) {
@@ -80,6 +80,13 @@ angular.module('chordApp')
     debugger;
   }
 
+  this.clickNote = function(scope,position) {
+    var newNote = this.IntToChord(position);
+    var notes = JSON.parse(scope.notes);
+    notes.push(newNote);
+    scope.notes = JSON.stringify(notes);
+  }
+
   var instrumentName = 'acoustic';
   var instrumentName = 'piano';
   var instrument = Synth.createInstrument(instrumentName);
@@ -99,7 +106,7 @@ angular.module('chordApp')
     'm' : [3,7],
     'm7' : [3,7,10],
     'm5b7' : [3,6,10,12],
-    'm9' : [3,7,10,15],
+    'm9' : [3,7,10,14],
     '7' : [4,7,10],
     '7b9#11' : [4,7,10,13,18],
     '7M' : [4,7,11],
@@ -114,7 +121,8 @@ angular.module('chordApp')
     var match = symbol.match(re)  
     var baseRank = this.ChordToInt(match[1]+match[2]+"3");
     var chordIntervals = chordTypes[match[3]]
-    chordIntervals.splice(0,0,-24);
+    var bassOffset = 0; // octaves down
+    chordIntervals.splice(0,0,-12*bassOffset);
     return chordIntervals.map(c => this.IntToChord(baseRank + c));
   }
 

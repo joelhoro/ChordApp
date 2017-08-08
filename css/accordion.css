@@ -40,6 +40,9 @@ text {
   font-size: 6pt;  
 }
 
+.accordion-key-xxs {
+  font-size: 4pt;  
+}
 
 .key:hover circle {
   fill: orange;

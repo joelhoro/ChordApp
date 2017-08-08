@@ -52,7 +52,7 @@ angular.module('chordApp')
   $scope.load = () => storage.load($scope);
   $scope.save = () => storage.save($scope);
   
-  $scope.play = (chord,type) => {
+  $scope.play = function(chord,type) {
     var notes = chord.map(chord => {
         var note = util.ChordSplit(chord);
         duration = 2;
@@ -63,6 +63,9 @@ angular.module('chordApp')
     util.PlayNotes(notes,delay);
   }
 
+  $scope.x = function() {
+    debugger;
+  }
 
   $scope.playAll = function() {
     var i = 0;
@@ -91,5 +94,59 @@ angular.module('chordApp')
 
   $scope.griffs = _.keys(util.Griffs);
   $scope.griff = $scope.griffs[0];
+
+  $scope.count = 0;
+  var instrumentName = 'piano';
+  var instrument = Synth.createInstrument(instrumentName);
+
+  function updateActiveNotes() {
+    $scope.activeNotes = util.Sort(_.keys($scope.activeNotesDictionary));
+    //
+    //console.log($scope.activeNotes);
+  }
+
+  $scope.deleteActiveNotes = function() {
+    $scope.activeNotesDictionary = {};
+    updateActiveNotes();
+  }
+
+  $scope.removenote = function(note) {
+    delete($scope.activeNotesDictionary[note]);
+    updateActiveNotes();
+  }
+
+  $scope.processKeystroke = function(event) {
+    //console.log(event);
+    var notes = "q2w3er5t6y7ui9o0p[=]"
+    var noteRank = notes.indexOf(event.key);
+    if(noteRank<0) return;
+
+    var fullNote = util.IntToChord(noteRank+36);
+
+    if(event.type=="keydown") {
+      var note = util.ChordSplit(fullNote);
+      if($scope.activeNotesDictionary[fullNote] == undefined)
+          instrument.play(note[0],note[1],2);
+      $scope.activeNotesDictionary[fullNote] = 1;
+    }
+    else if (event.type == "keyup" && !$scope.stickyNotes) {
+      delete($scope.activeNotesDictionary[fullNote]);
+    }
+
+    updateActiveNotes();
+
+    $scope.$apply();
+  }
+
+  $scope.stickyNotes = true;
+  $scope.activeNotesDictionary = {};
+
+  // $scope.activeNotesDictionary["C3"] = 1;
+  // $scope.activeNotesDictionary["E3"] = 1;
+  // $scope.activeNotesDictionary["G3"] = 1;
+  updateActiveNotes();
+
+  document.addEventListener("keydown", $scope.processKeystroke, false);
+  document.addEventListener("keyup", $scope.processKeystroke, false);
 
 });
