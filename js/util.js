@@ -135,6 +135,20 @@ export var utils = function(){
     chordIntervals.splice(0,0,-12*bassOffset);
     return chordIntervals.map(c => utils.IntToChord(baseRank + c));
   }
+
+  var notes = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B" ]; 
+  utils.black = [];
+  utils.noteNames = [];
+  utils.fullNoteNames = [];
+  for (var i = 0; i < 90; i++) {
+          var note = (i+2)%12;
+          utils.black[i] = notes[note].length > 1;
+          utils.fullNoteNames[i] = notes[note] + Math.floor((i+2)/12);
+          utils.noteNames[i] = notes[note];
+        }
+  
+
+
   return utils;
 }();
 

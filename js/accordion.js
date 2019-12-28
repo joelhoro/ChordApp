@@ -10,24 +10,12 @@ var Griffs = {
 var numberOfCols = 21;
 var numberOfRows = 5;
 
-var notes = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B" ]; 
-var black = [];
-var noteNames = [];
-var fullNoteNames = [];
-for (var i = 0; i < 90; i++) {
-        var note = (i+2)%12;
-        black[i] = notes[note].length > 1;
-        fullNoteNames[i] = notes[note] + Math.floor((i+2)/12);
-        noteNames[i] = notes[note];
-      }
-
 Vue.component('accordion', {
     template: `<span @keydown='keyDown($event)'>
-    <input type='text' ></input>
     <svg type='accordionkeyboard' :width='21*size' :height='4.7*size' >
         <g :name='"accordionrow-"+i' v-for='i in columns' :transform='scaleFn()' >
           <g :note='noteFn(i,j)' class='key' 
-            :class='{ highlighted: noteHighlighted[noteFn(i,j)], black: black[noteFn(i,j)] }' 
+            :class='{ highlighted: isSelected(i,j), black: black[noteFn(i,j)] }' 
             v-for='j in rows' 
             :transform='translate(-9.5+w*i+j*w/2+11.2*w,.5+j*w)'
              @click="$emit('note',fullNoteNames[noteFn(i,j)])"
@@ -54,12 +42,16 @@ Vue.component('accordion', {
             scale: this.size,
             noteFn: Griffs[this.griff],
             noteHighlighted: {},
-            black,
-            noteNames,
-            fullNoteNames,
+            black: util.black,
+            noteNames: util.noteNames,
+            fullNoteNames: util.fullNoteNames,
         }
     },
     methods: {
+        isSelected(i,j) {
+            var note = this.noteFn(i,j);
+            return this.selected.indexOf(this.fullNoteNames[note])>=0;
+        },
         translate(x,y) {
             return `translate(${x},${y})`;
         },
@@ -80,17 +72,6 @@ Vue.component('accordion', {
         else
           return "accordion-key-xxs";
     },
-        keyDown(event) {
-            var key = event.key;
-            console.log(key);
-            var keys = `awzsexdrcftvgybhunjimko,lp.;[/']`;
-            var idx = keys.indexOf(key);
-            if(idx<0) 
-                return;
-            var note = this.fullNoteNames[idx];
-            console.log(note);
-            util.PlayNotes([note]);
-        },
 
 
     }
