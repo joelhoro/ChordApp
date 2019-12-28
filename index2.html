@@ -1,0 +1,100 @@
+<link href='css/accordion.css' rel='stylesheet' type='text/css'>  
+<div id="main">
+    <accordion></accordion>
+</div>
+
+<style>
+svg {
+    border: black solid;   
+}</style>
+<script src="node_modules/vue/dist/vue.min.js"></script>
+<script src="node_modules/underscore/underscore-min.js"></script>
+
+<script>
+
+var Griffs = {
+          'c-system' : (i,j) => 3*i+j*2+2,
+          'b-system' : (i,j) => 3*i+j+2,
+        }
+var griff = 'c-system';
+
+var notes = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B" ]; 
+var black = [];
+var noteNames = [];
+for (var i = 0; i < 90; i++) {
+        note = (i+2)%12;
+        black[i] = notes[note].length > 1;
+        noteNames[i] = notes[note];
+      }
+
+var size = 60;
+var scale = size;
+        // console.debug($scope.size);
+var r = 40*scale/100;
+var w = 90*scale/100;
+
+Vue.directive('init', {
+    bind: function(el, binding /*, vnode*/) {
+        console.log(binding.value); //# This line is optional, of course.
+    }
+});
+
+var numberOfCols = 21;
+var numberOfRows = 5;
+
+Vue.component('accordion', {
+    template: `
+    <svg type='accordionkeyboard' :width='25*size' :height='6*size'>
+        <g :name='"accordionrow-"+i' v-for='i in columns'  >
+          <g :note='noteNames[noteFn(i,j)]' class='key' :class='{ highlighted: noteHighlighted[noteFn(i,j)], black: black[noteFn(i,j)] }' v-for='j in rows' 
+             ng-click='util.clickNote($parent,noteFn(i,j))'>
+          <circle :cx='-9.5*scale+w*i+j*w/2+11.2*w' :cy='scale*.5+j*w' :r='r' stroke=black />
+          <text :class='textClass(scale)' :x='-9.5*scale+w*i+j*w/2+12*w-0.15*scale' :y='scale*1+j*w+0.10*scale'>{{noteNames[noteFn(i,j)]}}</text>
+          </g>
+        </g>
+       </svg>
+`,
+// <!-- <text visibility='{{textvisibility}}' class='{{textClassSmall}}' x={{x+0.05*scale}} y={{y+0.3*scale}}>{{position}}</text> -->
+
+    data: function() {
+        return {
+            size,
+            columns: _.range(0,numberOfCols),
+            rows: _.range(0,numberOfRows),
+            r,
+            scale,
+            w,
+            noteFn: Griffs[griff],
+            noteHighlighted: {},
+            black,
+            noteNames,
+        }
+    },
+    methods: {
+     textClass(scale) {
+       if(scale >= 150)
+          return "accordion-key-xl";
+        else if(scale >= 100)
+          return "accordion-key-lg";
+        else if(scale >= 50)
+          return "accordion-key";
+        else if(scale > 30)
+          return "accordion-key-sm";
+        else
+          return "accordion-key-xs";
+    }
+
+
+    }
+});
+
+new Vue({
+    el: '#main',
+    data: {
+      label: 'hello'
+    },
+  });
+  
+
+
+</script>
