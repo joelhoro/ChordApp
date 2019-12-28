@@ -96,8 +96,8 @@ angular.module('chordApp')
   $scope.griff = $scope.griffs[0];
 
   $scope.count = 0;
-  var instrumentName = 'piano';
-  var instrument = Synth.createInstrument(instrumentName);
+  // var instrumentName = 'piano';
+  // var instrument = Synth.createInstrument(instrumentName);
 
   function updateActiveNotes() {
     $scope.activeNotes = util.Sort(_.keys($scope.activeNotesDictionary));
@@ -125,9 +125,13 @@ angular.module('chordApp')
 
     if(event.type=="keydown") {
       var note = util.ChordSplit(fullNote);
-      if($scope.activeNotesDictionary[fullNote] == undefined)
-          instrument.play(note[0],note[1],2);
-      $scope.activeNotesDictionary[fullNote] = 1;
+      if($scope.activeNotesDictionary[fullNote] == undefined) {
+        util.PlayNotes([note]);
+        $scope.activeNotesDictionary[fullNote] = 1;
+      }
+      else
+        delete($scope.activeNotesDictionary[fullNote]);
+
     }
     else if (event.type == "keyup" && !$scope.stickyNotes) {
       delete($scope.activeNotesDictionary[fullNote]);

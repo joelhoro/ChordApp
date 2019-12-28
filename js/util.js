@@ -1,11 +1,11 @@
-angular.module('chordApp')
-.service('util',function(){
-  
+export var utils = function(){
+
+  var utils = {};
   var notes = ["C","D","E","F","G","A","B"];
   var allNotes = ["C","C#","D","D#","E","F","F#","G","G#","A",
                  "A#","B"];
   
-  this.IntToChord = function(k) {
+  utils.IntToChord = function(k) {
     var note = k%12;
     var octave = ( k - note) / 12;
     return allNotes[note] + octave.toString();
@@ -16,25 +16,28 @@ angular.module('chordApp')
     return chord.match(chordPatt)
   }
   
-  this.Normalize = function(chord) {
-    return this.IntToChord(this.ChordToInt(chord));
+  utils.Normalize = function(chord) {
+    return utils.IntToChord(utils.ChordToInt(chord));
   }
 
-  this.ChordToInt = function(chord) {
-    match = matchChord(chord);
+  utils.ChordToInt = function(chord) {
+    var match = matchChord(chord);
     if(match == null)
       return -1;
-    [full,note,alteration,octave] = match
-    value = 0
+    var note = match[1];
+    var alteration = match[2];
+    var octave = match[3];
+
+    var value = 0
     value += allNotes.indexOf(note);
-    alterations = {"#" : 1, "b" : -1, "" : 0}
+    var alterations = {"#" : 1, "b" : -1, "" : 0}
     value += alterations[alteration];
     value += octave * 12;
     return value;
   }
   
-  this.ChordSplit = function(chord) {
-    chord = this.Normalize(chord);
+  utils.ChordSplit = function(chord) {
+    chord = utils.Normalize(chord);
     match = matchChord(chord);
     if(match == null)
       return -1;
@@ -42,7 +45,7 @@ angular.module('chordApp')
     return [note+alteration,octave];
   }
 
-  this.Invert = function(chords,direction) {
+  utils.Invert = function(chords,direction) {
     var chords = chords.slice();
     var sign = 1;
     if(direction == "down") {
@@ -51,51 +54,58 @@ angular.module('chordApp')
     }
     
     var first = chords[0];
-    first = this.IntToChord(this.ChordToInt(first) + 12*sign);
+    first = utils.IntToChord(utils.ChordToInt(first) + 12*sign);
     chords = chords.splice(1)
     chords.push(first);
     if(direction == "down") {
       chords.reverse();
     }
     
-    return this.Sort(chords);
+    return utils.Sort(chords);
   }
 
-  this.Sort = function(chords) {
-    return _.sortBy(chords,c => this.ChordToInt(c));
+  utils.Sort = function(chords) {
+    return _.sortBy(chords,c => utils.ChordToInt(c));
   }
   
-  this.Transpose = function(chords,direction) {
+  utils.Transpose = function(chords,direction) {
     var shift = {"up" : 1, "down" : -1}[direction];
-    return chords.map(c => this.IntToChord(this.ChordToInt(c) + shift));
+    return chords.map(c => utils.IntToChord(utils.ChordToInt(c) + shift));
     
   }
 
-  this.Griffs = {
+  utils.Griffs = {
           'c-system' : (i,j) => 3*i+j*2+2,
           'b-system' : (i,j) => 3*i+j+2,
         }
 
-  this.test = function(x) {
+  utils.test = function(x) {
     debugger;
   }
 
-  this.clickNote = function(scope,position) {
-    var newNote = this.IntToChord(position);
+  utils.clickNote = function(scope,position) {
+    var newNote = utils.IntToChord(position);
     var notes = JSON.parse(scope.notes);
     notes.push(newNote);
     scope.notes = JSON.stringify(notes);
   }
 
-  var instrumentName = 'acoustic';
-  var instrumentName = 'piano';
-  var instrument = Synth.createInstrument(instrumentName);
+  // var instrumentName = 'acoustic';
+  // var instrumentName = 'piano';
+  // var instrument = Synth.createInstrument(instrumentName);
 
-  this.PlayNotes = function(notes,interval) {
+  utils.PlayNotes = function(notes,interval) {
     var i = 0;
     notes.map(note => {
+      var offset = 30;
+      var velocity = 80;
+      var channel = 0;
+      var noteInt = utils.ChordToInt(note) + offset;
       //console.log("Preparing", note);
-      setTimeout(() => instrument.play(note[0],note[1],note[2]),(i++ + 0.1)*interval);
+      MIDI.programChange(0,0);
+      
+      setTimeout(() => MIDI.noteOn(channel,noteInt, velocity, 0),(i + 0.1)*interval);
+      setTimeout(() => MIDI.noteOff(channel,noteInt, 0.5),(i++ + 0.5)*interval);      
     });
   }
 
@@ -116,14 +126,16 @@ angular.module('chordApp')
     'sus' : [4,8,10,13]
   }
 
-  this.SymbolToChord = function(symbol) {
+  utils.SymbolToChord = function(symbol) {
     var re = /([ABCDEFG])([#b]?)(.*)/
     var match = symbol.match(re)  
-    var baseRank = this.ChordToInt(match[1]+match[2]+"3");
+    var baseRank = utils.ChordToInt(match[1]+match[2]+"3");
     var chordIntervals = chordTypes[match[3]]
     var bassOffset = 0; // octaves down
     chordIntervals.splice(0,0,-12*bassOffset);
-    return chordIntervals.map(c => this.IntToChord(baseRank + c));
+    return chordIntervals.map(c => utils.IntToChord(baseRank + c));
   }
+  return utils;
+}();
 
-})
+export default utils;

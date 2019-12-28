@@ -1,99 +1,63 @@
 <link href='css/accordion.css' rel='stylesheet' type='text/css'>  
 <div id="main">
-    <accordion></accordion>
+    <accordion v-for='size in [40]' :size='size'  :selected='selected' @note='noteClicked($event)' ></accordion>
+    <!-- <accordion v-for='size in [20]' griff='b-system' :size='size'  :selected='selected' ></accordion> -->
+    <!-- <accordion v-for='size in [10,20,45,70,100,150,250,450]' :size='size'  :selected='selected' ></accordion> -->
 </div>
 
 <style>
-svg {
+svg 
+{
     border: black solid;   
-}</style>
-<script src="node_modules/vue/dist/vue.min.js"></script>
-<script src="node_modules/underscore/underscore-min.js"></script>
+}
+</style>
+<!-- <script src="node_modules/vue/dist/vue.min.js"></script> -->
+<!-- <script src="node_modules/underscore/underscore-min.js"></script> -->
 
-<script>
+<!-- polyfills -->
+<script src="js/inc/shim/Base64.js" type="text/javascript"></script>
+<script src="js/inc/shim/Base64binary.js" type="text/javascript"></script>
+<script src="js/inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+<!-- midi.js package -->
+<script src="js/midi/audioDetect.js" type="text/javascript"></script>
+<script src="js/midi/gm.js" type="text/javascript"></script>
+<script src="js/midi/loader.js" type="text/javascript"></script>
+<script src="js/midi/plugin.audiotag.js" type="text/javascript"></script>
+<script src="js/midi/plugin.webaudio.js" type="text/javascript"></script>
+<script src="js/midi/plugin.webmidi.js" type="text/javascript"></script>
+<!-- utils -->
+<script src="js/util/dom_request_xhr.js" type="text/javascript"></script>
 
-var Griffs = {
-          'c-system' : (i,j) => 3*i+j*2+2,
-          'b-system' : (i,j) => 3*i+j+2,
+<script type='module'>
+import Vue from '../node_modules/vue/dist/vue.esm.browser.js';
+
+import './js/accordion.js';
+import util from './js/util.js';
+
+console.log("Loading midi");
+var startTime = new Date();
+MIDI.loadPlugin({
+			soundfontUrl: './soundfont/',
+      instruments: ['acoustic_grand_piano'],// 'acoustic_guitar_nylon', 'tubular_bells', 'kalimba', 'timpani', 'orchestral_harp', 'xylophone', 'alto_sax', 'tuba', 'pan_flute', 'violin'],
+      onsuccess: function() {
+        console.log("Midi ready");
+        console.log(`${new Date()-startTime}ms elapsed`);
+        Initialize();
+}});
+
+function Initialize() {
+    new Vue({
+        el: '#main',
+        data: {
+            selected: [],
+        },
+        methods: {
+            noteClicked(ev) {
+                util.PlayNotes([ev]);
+            }
         }
-var griff = 'c-system';
-
-var notes = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B" ]; 
-var black = [];
-var noteNames = [];
-for (var i = 0; i < 90; i++) {
-        note = (i+2)%12;
-        black[i] = notes[note].length > 1;
-        noteNames[i] = notes[note];
-      }
-
-var size = 60;
-var scale = size;
-        // console.debug($scope.size);
-var r = 40*scale/100;
-var w = 90*scale/100;
-
-Vue.directive('init', {
-    bind: function(el, binding /*, vnode*/) {
-        console.log(binding.value); //# This line is optional, of course.
-    }
-});
-
-var numberOfCols = 21;
-var numberOfRows = 5;
-
-Vue.component('accordion', {
-    template: `
-    <svg type='accordionkeyboard' :width='25*size' :height='6*size'>
-        <g :name='"accordionrow-"+i' v-for='i in columns'  >
-          <g :note='noteNames[noteFn(i,j)]' class='key' :class='{ highlighted: noteHighlighted[noteFn(i,j)], black: black[noteFn(i,j)] }' v-for='j in rows' 
-             ng-click='util.clickNote($parent,noteFn(i,j))'>
-          <circle :cx='-9.5*scale+w*i+j*w/2+11.2*w' :cy='scale*.5+j*w' :r='r' stroke=black />
-          <text :class='textClass(scale)' :x='-9.5*scale+w*i+j*w/2+12*w-0.15*scale' :y='scale*1+j*w+0.10*scale'>{{noteNames[noteFn(i,j)]}}</text>
-          </g>
-        </g>
-       </svg>
-`,
-// <!-- <text visibility='{{textvisibility}}' class='{{textClassSmall}}' x={{x+0.05*scale}} y={{y+0.3*scale}}>{{position}}</text> -->
-
-    data: function() {
-        return {
-            size,
-            columns: _.range(0,numberOfCols),
-            rows: _.range(0,numberOfRows),
-            r,
-            scale,
-            w,
-            noteFn: Griffs[griff],
-            noteHighlighted: {},
-            black,
-            noteNames,
-        }
-    },
-    methods: {
-     textClass(scale) {
-       if(scale >= 150)
-          return "accordion-key-xl";
-        else if(scale >= 100)
-          return "accordion-key-lg";
-        else if(scale >= 50)
-          return "accordion-key";
-        else if(scale > 30)
-          return "accordion-key-sm";
-        else
-          return "accordion-key-xs";
-    }
-
-
-    }
-});
-
-new Vue({
-    el: '#main',
-    data: {
-      label: 'hello'
-    },
-  });
+    });
+}
   
 
 

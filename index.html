@@ -7,11 +7,27 @@
 <link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>  
 <link href='css/accordion.css' rel='stylesheet' type='text/css'>  
   
-  
+		<!-- polyfills -->
+		<script src="js/inc/shim/Base64.js" type="text/javascript"></script>
+		<script src="js/inc/shim/Base64binary.js" type="text/javascript"></script>
+		<script src="js/inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+		<!-- midi.js package -->
+		<script src="js/midi/audioDetect.js" type="text/javascript"></script>
+		<script src="js/midi/gm.js" type="text/javascript"></script>
+		<script src="js/midi/loader.js" type="text/javascript"></script>
+		<script src="js/midi/plugin.audiotag.js" type="text/javascript"></script>
+		<script src="js/midi/plugin.webaudio.js" type="text/javascript"></script>
+		<script src="js/midi/plugin.webmidi.js" type="text/javascript"></script>
+    <!-- utils -->
+    <script src="js/util/dom_request_xhr.js" type="text/javascript"></script>
+
   
 </head>
 
 <body>
+
+  <div class='piano'></div>
+
   <div ng-app='chordApp'>
   <div ng-controller='chordAppCtrl'>
 
@@ -19,7 +35,8 @@
     <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
        </svg>
  -->
-    <button ng-click='play(activeNotes,"arpeggio")'>play</button>
+ <button ng-click='play(activeNotes)'>play</button>
+ <button ng-click='play(activeNotes,"arpeggio")'>arpeggio</button>
     <button ng-click='deleteActiveNotes()'>delete all</button>
     <br>
           <span ng-repeat='note in activeNotes'>
@@ -68,11 +85,24 @@
   <script src='js\util.js'></script>
   <script src='js\storage.js'></script>
   <script src='js\controller.js'></script>
-  <script src='js\accordionWidget.js'></script>
+  <script src='js\accordionWidget.js'></script> -->
 
-  <script src="lib\audiosynth.js"></script>
+  <!-- <script src="lib\audiosynth.js"></script> -->
 
   <script>
+
+console.log("Loading midi");
+var startTime = new Date();
+MIDI.loadPlugin({
+			soundfontUrl: './soundfont/',
+      instruments: ['acoustic_grand_piano'],// 'acoustic_guitar_nylon', 'tubular_bells', 'kalimba', 'timpani', 'orchestral_harp', 'xylophone', 'alto_sax', 'tuba', 'pan_flute', 'violin'],
+      onsuccess: function() {
+        //piano = new Piano();
+        console.log("Midi ready");
+        console.log(`${new Date()-startTime}ms elapsed`);
+      }
+});
+
 
     // play here if needed  
 

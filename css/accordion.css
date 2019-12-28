@@ -21,7 +21,7 @@ text {
 }
 
 .accordion-key {
-  font-size: 15pt;  
+  font-size: 20pt;  
 }
 
 .accordion-key-xl {
@@ -29,15 +29,15 @@ text {
 }
 
 .accordion-key-lg {
-  font-size: 25pt;  
+  font-size: 30pt;  
 }
 
 .accordion-key-sm {
-  font-size: 8pt;  
+  font-size: 12pt;  
 }
 
 .accordion-key-xs {
-  font-size: 6pt;  
+  font-size: 6.5pt;  
 }
 
 .accordion-key-xxs {
@@ -46,4 +46,8 @@ text {
 
 .key:hover circle {
   fill: orange;
+
+}
+.key:hover {
+  cursor: pointer;
 }
