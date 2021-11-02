@@ -12,11 +12,11 @@ circle {
 }
 
 .highlighted circle {
-  fill: orange;
+  fill: #66ff00;
 }
 
 text {
-  font-weight: bold;
+  /* font-weight: bold; */
   font-family: 'Indie Flower', cursive;
 }
 
@@ -33,11 +33,11 @@ text {
 }
 
 .accordion-key-sm {
-  font-size: 12pt;  
+  font-size: 10pt;  
 }
 
 .accordion-key-xs {
-  font-size: 6.5pt;  
+  font-size: 4.5pt;  
 }
 
 .accordion-key-xxs {

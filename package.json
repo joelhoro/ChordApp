@@ -1,7 +1,7 @@
 {
   "name": "chordapp",
   "version": "1.0.0",
-  "description": "A Pen created at CodePen.io. You can find this one at http://codepen.io/joelhoro/pen/ZJBGYO.",
+  "description": "App to create chord patterns for the button accordion",
   "main": "index.js",
   "directories": {
     "lib": "lib"
@@ -19,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/joelhoro/ChordApp.git"
   },
-  "author": "",
+  "author": "Joel Horowitz",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/joelhoro/ChordApp/issues"

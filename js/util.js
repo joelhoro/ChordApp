@@ -98,7 +98,7 @@ export var util = function(){
     var i = 0;
     notes.map(note => {
       var offset = 30;
-      var velocity = 80;
+      var velocity = 120;
       var channel = 0;
       var noteInt = utils.ChordToInt(note) + offset;
       //console.log("Preparing", note);
