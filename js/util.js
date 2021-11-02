@@ -1,4 +1,4 @@
-export var utils = function(){
+export var util = function(){
 
   var utils = {};
   var notes = ["C","D","E","F","G","A","B"];
@@ -152,4 +152,4 @@ export var utils = function(){
   return utils;
 }();
 
-export default utils;
+// export default utils;

@@ -1,6 +1,6 @@
 import Vue from '../node_modules/vue/dist/vue.esm.browser.js';
 import  '../node_modules/underscore/underscore-min.js';
-import util from './util.js';
+import {util} from './util.js';
 
 var Griffs = {
           'c-system' : (i,j) => 3*i+j*2+2,
