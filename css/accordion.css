@@ -3,16 +3,16 @@ circle {
 }
 
 .black circle {
-  fill: #DDDDDD;
+  fill: #000000;
 }
 
 
 .black text {
-  fill: black;
+  fill: white;
 }
 
 .highlighted circle {
-  fill: #66ff00;
+  fill: #596ef6 ;
 }
 
 text {

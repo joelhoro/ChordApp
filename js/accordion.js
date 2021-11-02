@@ -12,12 +12,12 @@ var numberOfRows = 5;
 
 Vue.component('accordion', {
     template: `<span @keydown='keyDown($event)'>
-    <svg type='accordionkeyboard' :width='21*size' :height='4.7*size' >
+    <svg type='accordionkeyboard' :width='21*size' :height='4*size' >
         <g :name='"accordionrow-"+i' v-for='i in columns' :transform='scaleFn()' >
           <g :note='noteFn(i,j)' class='key' 
             :class='{ highlighted: isSelected(i,j), black: black[noteFn(i,j)] }' 
             v-for='j in rows' 
-            :transform='translate(-9.5+w*i+j*w/2+11.2*w,.5+j*w)'
+            :transform='translate(-9.5+w*i*0.8+j*w/2+11.2*w,.5+j*w*0.8)'
              @click="$emit('note',fullNoteNames[noteFn(i,j)])"
             >
             <circle :transform='scaleFn(true)' :cx='0' :cy='0' :r='r*scale' stroke=black />
