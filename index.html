@@ -1,5 +1,7 @@
 <link href='css/accordion.css' rel='stylesheet' type='text/css'>  
 <div id="main">
+    <span v-if='showkeyboard' class="material-icons" @click='showkeyboard = !showkeyboard'>keyboard_hide</span>
+    <span v-else class="material-icons" @click='showkeyboard = !showkeyboard'>keyboard</span>
     <span class="material-icons" @click='reset'>delete</span>
     <span class="material-icons" @click='playChord(selected)'>play_circle</span>
     <span class="material-icons"  @click='playChord(selected,true)'>play_circle_outline</span>
@@ -7,7 +9,12 @@
     <span class="material-icons" @click='transpose("down")'>arrow_drop_down</span>
     <span class="material-icons" @click='transpose("up")'>arrow_drop_up</span>
     <br>
-    <accordion v-for='size in [40]' v-bind:key="size.id" :size='size'  :selected='selected' @note='noteClicked($event)' ></accordion>
+    <accordion v-for='size in [40]' 
+        v-bind:key="size.id" 
+        :size='size'  
+        :selected='selected' 
+        :showkeyboard='showkeyboard'
+        @note='noteClicked($event)' ></accordion>
     <!-- <br>Notes selected:     {{selected}} -->
     
     <span v-for='(selected,idx) in stack'>
@@ -78,13 +85,16 @@ MIDI.loadPlugin({
         Initialize();
 }});
 
+var initial_chords = samples.ipanema;
+
 function Initialize() {
     new Vue({
         el: '#main',
         data: {
             ready: false,
-            selected: ["E2","Ab2","B2","E3"],
-            stack: samples.ipanema,
+            selected: initial_chords[0],
+            stack: initial_chords,
+            showkeyboard: true,
         },
         methods: {
             noteClicked(ev) {
@@ -129,7 +139,7 @@ function Initialize() {
                     arr.push(elt);
             }
             $(document).on('keydown', function(event) {
-                        // console.log(note);
+                        console.log(event.key);
                         var note = util.GetNoteFromKey(event.key);
                         if(!note)
                             return;
@@ -143,7 +153,8 @@ function Initialize() {
                         var note = util.GetNoteFromKey(event.key);
                         if(!note)
                             return;
-                  //      remove(thisCopy.selected,note);
+                        if(!event.shiftKey)
+                          remove(thisCopy.selected,note);
                     });
 
         }

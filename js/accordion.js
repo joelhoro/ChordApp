@@ -7,7 +7,7 @@ var Griffs = {
           'b-system' : (i,j) => 3*i+j+2,
         }
 
-var numberOfCols = 21;
+var numberOfCols = 12;
 var numberOfRows = 5;
 
 Vue.component('accordion', {
@@ -22,6 +22,9 @@ Vue.component('accordion', {
             >
             <circle :transform='scaleFn(true)' :cx='0' :cy='0' :r='r*scale' stroke=black />
             <text :transform='scaleFn(true)' :class='textClass(scale)' :x='-0.25*scale' :y='0.10*scale'>{{noteNames[noteFn(i,j)]}}</text>
+            <g v-if='showkeyboard' transform='translate(0.2,0.2) scale(0.7)'>
+            <text :transform='scaleFn(true)' :class='textClass(scale)' :x='-0.25*scale' :y='0.10*scale'>{{keyboardLetters[noteFn(i,j)]}}</text>
+            </g>
             </g>
         </g>
        </svg></span>
@@ -31,7 +34,8 @@ Vue.component('accordion', {
     props: {
         size: {type: Number},
         selected: {},
-        griff : {default: 'c-system'}
+        griff : {default: 'c-system'},
+        showkeyboard: {default: true}
     },
     data: function() {
         return {
@@ -44,6 +48,7 @@ Vue.component('accordion', {
             noteHighlighted: {},
             black: util.black,
             noteNames: util.noteNames,
+            keyboardLetters: util.keyboardLetters,
             fullNoteNames: util.fullNoteNames,
         }
     },

@@ -110,6 +110,7 @@ export var util = function(){
   }
 
   utils.GetNoteFromKey = function(key) {
+    key = key.toLowerCase();
     // console.log(key);
     var keys = `awzsexdrcftvgybhunjimko,lp.;[/']`;
     var idx = keys.indexOf(key);
@@ -123,6 +124,11 @@ export var util = function(){
         idx-=1;
     }
     return util.fullNoteNames[idx+8];
+  }
+
+  utils.GetKeyFromNoteIdx = function(idx) {
+    var keys = `awzsexdrcftvgybhunjimko,lp.;[/']`;
+    return keys[idx]; 
   }
 
   var chordTypes = {
@@ -155,11 +161,13 @@ export var util = function(){
   utils.black = [];
   utils.noteNames = [];
   utils.fullNoteNames = [];
+  utils.keyboardLetters = [];
   for (var i = 0; i < 90; i++) {
           var note = (i+2)%12;
           utils.black[i] = notes[note].length > 1;
           utils.fullNoteNames[i] = notes[note] + Math.floor((i+2)/12);
           utils.noteNames[i] = notes[note];
+          utils.keyboardLetters[i] = utils.GetKeyFromNoteIdx(i-8)
         }
   
 
