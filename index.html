@@ -8,22 +8,22 @@
     <span class="material-icons" @click='transpose("up")'>arrow_drop_up</span>
     <br>
     <accordion v-for='size in [40]' v-bind:key="size.id" :size='size'  :selected='selected' @note='noteClicked($event)' ></accordion>
-    <br>Notes selected:
-    {{selected}}
+    <!-- <br>Notes selected:     {{selected}} -->
     
     <span v-for='(selected,idx) in stack'>
     <hr><br>
     {{idx}}
+    <span class="material-icons" @click='deleteChord(idx)'>delete</span>
     <span v-if='idx<stack.length-1'  class="material-icons" @click='move(idx,1)'>south</span>
     <span v-if='idx>0' class="material-icons" @click='move(idx,-1)'>north</span>
-    <span class="material-icons" @click='deleteChord(idx)'>delete</span>
     <span class="material-icons" @click='playChord(selected)'>play_circle</span>
     <span class="material-icons"  @click='playChord(selected,true)'>play_circle_outline</span>
     <br>
     <accordion :size='24'  :selected='selected' @note='noteClicked($event)' ></accordion>
 
-    {{selected}}
+    <!-- {{selected}} -->
         </span>
+        <pre>{{stack}}</pre>
     <!-- <accordion v-for='size in [20]' griff='b-system' :size='size'  :selected='selected' ></accordion> -->
  <!-- <accordion v-for='size in [10,20,45,70,100,150,250,450]' :size='size'  :selected='selected' ></accordion> -->
 </div>
@@ -41,7 +41,7 @@ svg
 <!-- <script src="node_modules/vue/dist/vue.min.js"></script> -->
 <!-- <script src="node_modules/underscore/underscore-min.js"></script> -->
 
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="./css/googlefonts.css" rel="stylesheet">
 
 <!-- polyfills -->
 <script src="js/inc/shim/Base64.js" type="text/javascript"></script>
@@ -64,6 +64,7 @@ import Vue from '../node_modules/vue/dist/vue.esm.browser.js';
 
 import './js/accordion.js';
 import {util} from './js/util.js';
+import {samples} from './js/samples.js';
 
 console.log("Loading midi");
 var startTime = new Date();
@@ -83,7 +84,7 @@ function Initialize() {
         data: {
             ready: false,
             selected: ["E2","Ab2","B2","E3"],
-            stack: [ ["E2","Ab2","B2","E3"], ["E2", "F#2", "Bb2", "C#3"]],
+            stack: samples.ipanema,
         },
         methods: {
             noteClicked(ev) {
