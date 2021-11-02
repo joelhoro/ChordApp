@@ -1,8 +1,8 @@
 <link href='css/accordion.css' rel='stylesheet' type='text/css'>  
 <div id="main">
-    <accordion v-for='size in [40]' :size='size'  :selected='selected' @click='noteClicked($event)' ></accordion>
+    <accordion v-for='size in [40]' v-bind:key="size.id" :size='size'  :selected='selected' @note='noteClicked($event)' ></accordion>
     <!-- <accordion v-for='size in [20]' griff='b-system' :size='size'  :selected='selected' ></accordion> -->
-    <!-- <accordion v-for='size in [10,20,45,70,100,150,250,450]' :size='size'  :selected='selected' ></accordion> -->
+ <!-- <accordion v-for='size in [10,20,45,70,100,150,250,450]' :size='size'  :selected='selected' ></accordion> -->
 </div>
 
 <style>
@@ -55,30 +55,34 @@ function Initialize() {
         },
         methods: {
             noteClicked(ev) {
-                debugger;
-                //util.PlayNotes([ev]);
+                util.PlayNotes([ev]);
             }
         },
         mounted() {
             var thisCopy = this;
+            function remove(arr, elt) {
+                while(true) {
+                    var idx = arr.indexOf(elt);
+                    if(idx<0)
+                        return;
+                    arr.splice(idx,1);
+                }
+            }
             $(document).on('keydown', function(event) {
-                        var key = event.key;
-                        // console.log(key);
-                        var keys = `awzsexdrcftvgybhunjimko,lp.;[/']`;
-                        var idx = keys.indexOf(key);
-                        if(idx<0) {
-                            var otherkeys = `4567890-=`;
-                            var idx = otherkeys.indexOf(key);
-                            if(idx<0)
-                                return;
-                            idx+=2;
-                            idx*=3;
-                            idx-=1;
-                        }
-                        var note = util.fullNoteNames[idx+8];
                         // console.log(note);
+                        var note = util.GetNoteFromKey(event.key);
+                        if(!note)
+                            return;
                         util.PlayNotes([note]);
                         thisCopy.selected.push(note);
+                    });
+
+            $(document).on('keyup', function(event) {
+                        // console.log(note);
+                        var note = util.GetNoteFromKey(event.key);
+                        if(!note)
+                            return;
+                        remove(thisCopy.selected,note);
                     });
 
         }

@@ -109,6 +109,21 @@ export var util = function(){
     });
   }
 
+  utils.GetNoteFromKey = function(key) {
+    // console.log(key);
+    var keys = `awzsexdrcftvgybhunjimko,lp.;[/']`;
+    var idx = keys.indexOf(key);
+    if(idx<0) {
+        var otherkeys = `4567890-=`;
+        var idx = otherkeys.indexOf(key);
+        if(idx<0)
+            return;
+        idx+=2;
+        idx*=3;
+        idx-=1;
+    }
+    return util.fullNoteNames[idx+8];
+  }
 
   var chordTypes = {
 
