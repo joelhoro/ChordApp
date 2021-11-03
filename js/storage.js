@@ -1,21 +1,20 @@
-angular.module('chordApp')
-.service('storage',function(){
-  var keyNameBase = 'chordscreator.chordset'
-  var keyName = scope => keyNameBase + "." + scope.selectedSet;
-  
-  this.save = function(scope) {
-    var savedJSON = JSON.stringify(scope.chords);
-    console.log("Saving to ", keyName(scope));
-    localStorage.setItem(keyName(scope), savedJSON);
-  }
-  
-  this.load = function(scope) {
-    var json = localStorage.getItem(keyName(scope));
-    console.log("Loading from ", keyName(scope), JSON.parse(json));
-    scope.chords = JSON.parse(json);
-  }
+var keyNameBase = 'chordscreator.chordset'
+var keyName = name => keyNameBase + "." + name;
 
-  this.findChordSets = function() {
+export var storage = {
+  save(stack, name) {
+    var savedJSON = JSON.stringify(stack);
+    console.log("Saving to ", keyName(name));
+    localStorage.setItem(keyName(name), savedJSON);
+  },
+
+  load(name) {
+    var json = localStorage.getItem(keyName(name));
+    console.log("Loading from ", keyName(name), JSON.parse(json));
+    return JSON.parse(json);
+  },
+
+  findChordSets() {
     var chordSets = [];
     var regEx = new RegExp(keyNameBase + "\.(.*)")
     for (var key in localStorage){ 
@@ -23,8 +22,8 @@ angular.module('chordApp')
       if(match == null) continue;
       chordSets.push(match[1]);
     }
+    chordSets.sort();
     return chordSets;
   }
+}
 
-  
-})

@@ -1,5 +1,13 @@
+<title>ChordApp</title>
 <link href='css/accordion.css' rel='stylesheet' type='text/css'>  
 <div id="main">
+    <span v-for='set in savedSets()'>
+        <button @click='loadSet(set)'>{{set}}</button>
+    </span>
+    <span class="material-icons" @click='save'>save</span>
+    <input type='text' v-model='name' tabIndex="1"/>
+    <br>
+    <h2>Chord set '{{name}}'</h2>
     <span v-if='showkeyboard' class="material-icons" @click='showkeyboard = !showkeyboard'>keyboard_hide</span>
     <span v-else class="material-icons" @click='showkeyboard = !showkeyboard'>keyboard</span>
     <span class="material-icons" @click='reset'>delete</span>
@@ -10,6 +18,7 @@
     <span class="material-icons" @click='transpose("up")'>arrow_drop_up</span>
     <br>
     <accordion v-for='size in [40]' 
+        tabindex="0"
         v-bind:key="size.id" 
         :size='size'  
         :selected='selected' 
@@ -19,7 +28,6 @@
     
     <span v-for='(selected,idx) in stack'>
     <hr><br>
-    {{idx}}
     <span class="material-icons" @click='deleteChord(idx)'>delete</span>
     <span v-if='idx<stack.length-1'  class="material-icons" @click='move(idx,1)'>south</span>
     <span v-if='idx>0' class="material-icons" @click='move(idx,-1)'>north</span>
@@ -72,6 +80,7 @@ import Vue from '../node_modules/vue/dist/vue.esm.browser.js';
 import './js/accordion.js';
 import {util} from './js/util.js';
 import {samples} from './js/samples.js';
+import {storage} from './js/storage.js';
 
 console.log("Loading midi");
 var startTime = new Date();
@@ -92,11 +101,22 @@ function Initialize() {
         el: '#main',
         data: {
             ready: false,
-            selected: initial_chords[0],
+            name: 'untitled',
+            selected: [...initial_chords[0]],
             stack: initial_chords,
             showkeyboard: true,
         },
         methods: {
+            savedSets() {
+                return storage.findChordSets()
+            },
+            loadSet(setName) {
+                this.stack = storage.load(setName);
+                this.name = setName;
+            },
+            save() {
+                storage.save(this.stack, this.name);
+            },
             noteClicked(ev) {
                 util.PlayNotes([ev]);
             },
@@ -120,6 +140,9 @@ function Initialize() {
             transpose(direction) {
                 this.selected = util.Transpose(this.selected,direction);
                 this.playChord(this.selected, true);
+            },
+            keydownFn(event) {
+                debugger;
             }
         },
         mounted() {
@@ -138,25 +161,30 @@ function Initialize() {
                 else
                     arr.push(elt);
             }
-            $(document).on('keydown', function(event) {
-                        console.log(event.key);
-                        var note = util.GetNoteFromKey(event.key);
-                        if(!note)
-                            return;
-                        util.PlayNotes([note]);
+            $(document).on('keydown',function(event) {
+                var tabIndex = event.target.tabIndex;
+                if(tabIndex != 0)
+                    return;
+                console.log(event.key);
+                var note = util.GetNoteFromKey(event.key);
+                if(!note)
+                    return;
+                util.PlayNotes([note]);
 //                        thisCopy.selected.push(note);
-                        toggle(thisCopy.selected,note);
-                    });
+                toggle(thisCopy.selected,note);
+            });
 
             $(document).on('keyup', function(event) {
-                        // console.log(note);
-                        var note = util.GetNoteFromKey(event.key);
-                        if(!note)
-                            return;
-                        if(!event.shiftKey)
-                          remove(thisCopy.selected,note);
-                    });
-
+                var tabIndex = event.target.tabIndex;
+                if(tabIndex != 0)
+                    return;
+                // console.log(note);
+                var note = util.GetNoteFromKey(event.key);
+                if(!note)
+                    return;
+                if(!event.shiftKey)
+                    remove(thisCopy.selected,note);
+            });
         }
     });
 }
