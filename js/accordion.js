@@ -10,7 +10,7 @@ var Griffs = {
 var numberOfCols = 12;
 var numberOfRows = 5;
 
-Vue.component('accordion', {
+export var accordion = Vue.component('accordion', {
     template: `<span @keydown='keyDown($event)'>
     <svg type='accordionkeyboard' :width='21*size' :height='4*size' >
         <g :name='"accordionrow-"+i' v-for='i in columns' :transform='scaleFn()' >
