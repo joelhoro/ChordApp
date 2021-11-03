@@ -18,7 +18,7 @@ Vue.component('accordion', {
             :class='{ highlighted: isSelected(i,j), black: black[noteFn(i,j)] }' 
             v-for='j in rows' 
             :transform='translate(-9.5+w*i*0.8+j*w/2+11.2*w,.5+j*w*0.8)'
-             @click="$emit('note',fullNoteNames[noteFn(i,j)])"
+             @click="$emit('note',fullNoteNames[noteFn(i,j)])" 
             >
             <circle :transform='scaleFn(true)' :cx='0' :cy='0' :r='r*scale' stroke=black />
             <text :transform='scaleFn(true)' :class='textClass(scale)' :x='-0.25*scale' :y='0.10*scale'>{{noteNames[noteFn(i,j)]}}</text>

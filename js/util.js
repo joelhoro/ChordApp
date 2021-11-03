@@ -174,5 +174,3 @@ export var util = function(){
 
   return utils;
 }();
-
-// export default utils;
