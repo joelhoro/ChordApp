@@ -22,6 +22,7 @@ var template = `
     <span class="material-icons" @click='addToStack'>add_circle</span>
     <span class="material-icons" @click='transpose("down")'>arrow_drop_down</span>
     <span class="material-icons" @click='transpose("up")'>arrow_drop_up</span>
+    {{selected}}
     <br>
     <accordion v-for='size in [40]' 
         tabindex="0"
@@ -35,10 +36,12 @@ var template = `
     <span v-for='(selected,idx) in stack'>
     <hr><br>
     <span class="material-icons" @click='deleteChord(idx)'>delete</span>
-    <span v-if='idx<stack.length-1'  class="material-icons" @click='move(idx,1)'>south</span>
     <span v-if='idx>0' class="material-icons" @click='move(idx,-1)'>north</span>
+    <span v-if='idx<stack.length-1'  class="material-icons" @click='move(idx,1)'>south</span>
     <span class="material-icons" @click='playChord(selected)'>play_circle</span>
     <span class="material-icons"  @click='playChord(selected,true)'>play_circle_outline</span>
+    {{selected}}
+
     <br>
     <accordion :size='24'  :selected='selected' @note='noteClicked($event)' ></accordion>
 
@@ -66,6 +69,12 @@ export var chordapp = Vue.component('chordapp', {
     } 
   },
   methods: {
+      move(idx,offset) {
+          var old_value = this.stack[idx];
+          var new_value = this.stack[idx+offset];
+          Vue.set(this.stack, idx, new_value);
+          Vue.set(this.stack, idx+offset, old_value); 
+      },
       savedSets() {
           return storage.findChordSets()
       },
