@@ -48,8 +48,6 @@ var template = `
     <!-- {{selected}} -->
         </span>
         <pre>{{stack}}</pre>
-    <!-- <accordion v-for='size in [20]' griff='b-system' :size='size'  :selected='selected' ></accordion> -->
- <!-- <accordion v-for='size in [10,20,45,70,100,150,250,450]' :size='size'  :selected='selected' ></accordion> -->
 </div>
 `
 
@@ -100,7 +98,7 @@ export var chordapp = Vue.component('chordapp', {
       },
       playChord(chord, arpeggiate) {
           var delay = arpeggiate ? 100 : 0;
-          util.PlayNotes(chord, delay)
+          util.PlayNotes(chord, delay);
       },
       deleteChord(idx) {
           this.stack.splice(idx,1);
